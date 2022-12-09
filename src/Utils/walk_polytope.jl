@@ -1,9 +1,10 @@
 export walk_polytope
 function walk_polytope(f::Function, enet::EchelonMetNet, fbox::BoxGrid;
-        d1 = 1, # open dim index
         tol = 1e-6,
-        safe_int = 1
+        safe_int::Int = 1
     )
+
+    d1 = 1
     
     G = enet.net.S[:, enet.idxf]
     be = enet.net.b
@@ -11,8 +12,9 @@ function walk_polytope(f::Function, enet::EchelonMetNet, fbox::BoxGrid;
     ubd = enet.net.ub[enet.idxd]
 
     # convex iter
-    _d1, _ds... = [1:Ni for Ni in size(fbox)];
-    fixcoors = Iterators.product(_ds...)
+    _ds = eachindex.(fbox.dims_values)
+    _d1 = _ds[d1]
+    fixcoors = Iterators.product(_ds[eachindex(_ds) .!= d1]...)
     _d1i0 = firstindex(_d1)
     _d1i1 = lastindex(_d1)
     
