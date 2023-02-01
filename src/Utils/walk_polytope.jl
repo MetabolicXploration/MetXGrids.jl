@@ -6,7 +6,7 @@ function walk_polytope(f::Function, enet::EchelonMetNet, fbox::BoxGrid;
 
     d1 = 1
     
-    G = enet.net.S[:, enet.idxf]
+    G = enet.G
     be = enet.net.b
     lbd = enet.net.lb[enet.idxd]
     ubd = enet.net.ub[enet.idxd]
@@ -25,7 +25,7 @@ function walk_polytope(f::Function, enet::EchelonMetNet, fbox::BoxGrid;
         
         # println("-"^10)
         vf = fbox[_d1i0, dis...]
-        lbk, ubk = _vf1_extrema!(G, be, lbd, ubd, vf; k = d1)
+        lbk, ubk = _vfk_extrema(G, be, lbd, ubd, vf; k = d1)
         # @show lbk, ubk
         # lbk > ubk && continue # Not feasible
         lbki, ubki = _find_nearest.([lbk, ubk], x0k, dxk)
@@ -51,7 +51,8 @@ function walk_polytope(f::Function, enet::EchelonMetNet, fbox::BoxGrid;
 
         # iter feasibles
         for fi1 in lbki:1:ubki
-            f(fbox[fi1, dis...]) === true && return nothing
+            vf = fbox[fi1, dis...]
+            f(vf) === true && return nothing
         end
 
     end # for dis in fixcoors
@@ -71,8 +72,7 @@ end
 
 ## --------------------------------------------------------
 # Utils
-
-function _vf1_extrema!(G::AbstractMatrix, be::AbstractVector, 
+function _vfk_extrema!(G::AbstractMatrix, be::AbstractVector, 
         lbd::AbstractVector, ubd::AbstractVector,
         vf::AbstractVector; k::Int = firstindex(vf)
     )
@@ -93,19 +93,14 @@ function _vf1_extrema!(G::AbstractMatrix, be::AbstractVector,
     return lbk, ubk
 end
 
-function _vf1_extrema(G::AbstractMatrix, be::AbstractVector, 
+function _vfk_extrema(G::AbstractMatrix, be::AbstractVector, 
         lbd::AbstractVector, ubd::AbstractVector,
         vf::AbstractVector; k::Int = firstindex(vf)
     )
     vfk = vf[k]
-    ret = _vf1_extrema!(G, be, lbd, ubd, vf; k)
+    ret = _vfk_extrema!(G, be, lbd, ubd, vf; k)
     vf[k] = vfk
     return ret
-end
-
-function _find_nearest(x::Float64, x0::Float64, dx::Float64)
-    i, d = divrem(x - x0, dx)
-    return d < (dx / 2) ? Int(i)+1 : Int(i)+2
 end
 
 # Assumes vf already inbound

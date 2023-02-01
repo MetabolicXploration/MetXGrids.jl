@@ -4,13 +4,12 @@ authors = ["The members of MetabolicXploration"]
 version = "0.1.4"
 
 [deps]
-Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
-MetXOptim = "672bf490-d3aa-44fe-a664-43445036b9de"
-Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
-ExtractMacro = "f86d3d12-fd5b-522c-99e9-61577282a1e9"
-MetXNetHub = "be9415a8-24b2-49ae-ba75-41eeaa9f722f"
-ProgressMeter = "92933f4c-e287-5a05-a399-4b506db050ca"
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 MetXBase = "0b8c4419-604a-4c8e-9eed-0f79de4a140e"
+MetXNetHub = "be9415a8-24b2-49ae-ba75-41eeaa9f722f"
+MetXOptim = "672bf490-d3aa-44fe-a664-43445036b9de"
+ProgressMeter = "92933f4c-e287-5a05-a399-4b506db050ca"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 
 [compat]
 julia = "1.6"
